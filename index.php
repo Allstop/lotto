@@ -1,16 +1,8 @@
 <?php
+// 自動載入類別
+require 'vendor/autoload.php';
 
-require_once 'lotpro.php';
-
-$lotpro = new lotpro();
-$lotpro->pronum($lotto_num);
-$lotpro->prospl($lotto_spl);
-$lotpro->procumnum($lotto_cumnum);
-$lotpro->comparisonA();
-$lotpro->comparisonB();
-
-
-
-
-
+// 執行對應的動作
+$actions = new Mvc\Controller\Controller;
+$actions->run();
 
