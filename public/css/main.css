@@ -1,0 +1,49 @@
+body {
+   margin: 5%;
+   padding: 0;
+}
+div *{
+   margin:0;
+}
+#select {
+    width: 80px;
+}
+.data-input-style {
+   position: relative;
+   min-height: 1px;
+   padding-right: 30px;
+}
+.curl-output {
+   width: 800px;
+   height: 100px;
+   background-color: #DCDCDC;
+   overflow: scroll;
+}
+.regex-output-category {
+   width: 400px;
+   height: 400px;
+   /*background-color: #dbd7ff;*/
+   overflow: scroll;
+}
+.result-output td.title {
+   text-align:center;
+   width: 175px;
+   /*color: white;*/
+   /*background-color: #993514;*/
+   Align:Center;
+}
+.result-output tr td.t1 {
+   text-align:center;
+   /*color: white;*/
+   border-bottom-width: 2px;
+   border-bottom-style: solid;
+   border-right-width: 2px;
+   border-right-style: solid;
+
+}
+.result-output tr td.t3 {
+   text-align:center;
+   /*color: white;*/
+   border-bottom-width: 2px;
+   border-bottom-style: solid;
+}

@@ -22,16 +22,15 @@ class Controller
         $this->Model = Model::init();
         self::$data = new Data();
         self::$template = new View(implode('/', array(dirname(dirname(dirname(__DIR__))), 'templates')));
-
     }
 
     public final function index()
     {
-
+	View::render();
         View::urlOutput();
         View::regexOutput();
-	    View::resultOutput();
-	return self::$template->render();
+	View::resultOutput();
+	//return self::$template->render();
 
     }
     public function curlUrl()

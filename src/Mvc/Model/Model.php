@@ -1,88 +1,80 @@
 <?php
-
 namespace Mvc\Model;
 
 class Model
 {
-    //*開獎號碼
-    public $lotto_num;
-    //*開獎特別號
-    public $lotto_spl;
-    //*電腦選號
-    public $lotto_cumnum;
-    //*客選號
-    public $rtn_value;
+    public static $model = null;
 
-    protected $db = null;
-
-    public function __construct()
+    public static function init()
     {
-        //*開獎號碼
-        $this->lotto_num = $this->getArr(1, 49);
-        $this->lotto_spl = array_pop($this->lotto_num);
-        //*電腦選號
-        $this->lotto_cumnum = $this->getArr(1, 49, 6);
+        if (!static::$model) {
+            static::$model = new self();
+        }
+        return static::$model;
     }
-    //*亂數取號
-    public function getArr($min, $max, $rows = 7)
+
+    public function curlUrl($url, $method, $headerData, $parameterData)
     {
-        $array = array();
-        while (count($array) < $rows) {
-            $num = rand($min, $max);
-            if (! in_array($num, $array)) {
-                $array[] = $num;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        if ($headerData) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, http_build_query($headerData));
+        }
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        if ($method === 'get') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+        }
+        if ($method === 'put') {
+            if ($parameterData) {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameterData));
             }
         }
-        return $array;
-    }
-    //*產生開獎號碼
-    public function proNum()
-    {
-        return $this->lotto_num;
+        if ($method === 'post') {
+            if ($parameterData) {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameterData));
+            }
+        }
+        if ($method === 'delete') {
+            if ($parameterData) {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameterData));
+            }
+        }
+        $temp = preg_replace('/\s/', '', curl_exec($ch));
+        $temp = mb_convert_encoding($temp, 'utf-8', 'GBK,UTF-8,ASCII');
+        return $temp;
+        $ch = curl_init();
     }
 
-    //*產生開獎特別號
-    public function proSpl()
+    public function regex($temp, $regexValue)
     {
-        return $this->lotto_spl;
+        preg_match_all($regexValue, $temp, $mat);
+        return $mat;
     }
-    public function proCumNum()
+
+    public function regex2($temp, $regexValue)
     {
-        $this->rtn_value = array();
-        if (isset($_POST['cpc'])) {
-            switch ($_POST['cpc']) {
-                case 'mpc':
-                    $this->rtn_value = $this->lotto_cumnum;
-                    break;
-                case 'cpc':
-                    if (isset($_POST['num'])) {
-                        $this->rtn_value =$_POST['num'];
-                    } else {
-                        echo '尚未選號！';
-                    }
-                    break;
-                default:
-                    echo "兩者都不是";
-                    break;
-            }
-        } else {
+        foreach ($temp as $key => $value) {
+            preg_match_all($regexValue, $value, $ans);
+            $arr[$key] = implode(',', $ans[1]);
         }
-        return $this->rtn_value;
+        return $arr;
     }
-    //*比對開獎號碼&客選號
-    public function comparisonA()
+
+    public function split($temp, $num)
     {
-        $comparison_num=array_intersect($this->lotto_num, $this->rtn_value);
-        return count($comparison_num);
-    }
-    //*比對開獎特別號&客腦選號
-    public function comparisonB()
-    {
-        if (in_array($this->lotto_spl, $this->rtn_value)) {
-            $comparison_spl=1;
-        } else {
-            $comparison_spl=null;
+        foreach ($temp as $key => $value) {
+            $temp[$key] = implode(',', str_split($temp[$key], $num));
         }
-        return count($comparison_spl);
+        return $temp;
+    }
+
+    public function output($a, $b)
+    {
+        $arr = array_combine($a, $b);
+        return $arr;
     }
 }

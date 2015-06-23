@@ -1,8 +1,7 @@
 <?php
-// 自動載入類別
-require 'vendor/autoload.php';
+require "vendor/autoload.php";
+use Pux\Executor;
 
-// 執行對應的動作
-$actions = new Mvc\Controller\Controller;
-$actions->run();
-
+$mux = require "router/route.php";
+$route = $mux->dispatch($_SERVER['DOCUMENT_URI']);
+echo Executor::execute($route);

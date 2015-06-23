@@ -39,6 +39,11 @@ class View
         return self::$path;
     }
 
+    public static function main()
+    {
+
+    }
+
     public static function urlOutput()
     {
 
@@ -47,8 +52,7 @@ class View
     public static function regexOutput()
     {
 
-    }
-
+    }   
     public static function resultOutput()
     {
 
